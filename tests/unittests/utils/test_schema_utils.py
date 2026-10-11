@@ -388,6 +388,19 @@ class TestSchemaToJsonSchema:
 class TestLowercaseSchemaTypes:
   """Tests for lowercase_schema_types function."""
 
+  def test_unevaluated_items_schema_is_lowercased(self):
+    """Unevaluated array items are schemas; their defaults remain data."""
+    schema = {
+        "type": "ARRAY",
+        "unevaluatedItems": {
+            "type": "STRING",
+            "default": {"type": "NOT_A_SCHEMA"},
+        },
+    }
+    lowercase_schema_types(schema)
+    assert schema["unevaluatedItems"]["type"] == "string"
+    assert schema["unevaluatedItems"]["default"]["type"] == "NOT_A_SCHEMA"
+
   def test_properties_and_items_are_lowercased(self):
     schema = {
         "type": "OBJECT",

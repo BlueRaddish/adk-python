@@ -180,6 +180,7 @@ def lowercase_schema_types(value: object) -> None:
       "not",
       "propertyNames",
       "then",
+      "unevaluatedItems",
       "unevaluatedProperties",
   ):
     child_value = value.get(single_key)
