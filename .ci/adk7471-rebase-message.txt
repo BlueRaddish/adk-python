@@ -1,0 +1,7 @@
+fix(headers): merge tracking headers regardless of casing
+
+Preserve caller tokens across header-case aliases in the shared
+tracking-header merger and its MCP caller. Rebase the existing
+focused change onto current upstream without unrelated code edits.
+
+AI-assisted with OpenAI Codex.

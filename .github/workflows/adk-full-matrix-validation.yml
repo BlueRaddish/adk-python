@@ -1,4 +1,4 @@
-name: ADK Full Matrix Validation (scratch)
+name: ADK 7471 Rebase Validation (scratch)
 
 on:
   push:
@@ -8,42 +8,14 @@ permissions:
   contents: read
 
 jobs:
-  unit-tests:
-    name: ${{ matrix.scope.name }}-${{ matrix.python.lane }}
+  rebase-and-test:
+    name: rebase-7471-${{ matrix.python.lane }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
-      max-parallel: 12
+      max-parallel: 4
       matrix:
-        scope:
-          - name: adk-1
-            head: 785c21753656b2c949f6be46a72027881fbcc773
-            base: 6a3828325b6f9feb429aa9e73e86837ad9acecdd
-            project_config: 3ffba06717576286f871cc7a1198a4b34d066f78fb642e4d8924e1920ca3a13f
-            tree: ffdb6aa9f3e25b4249d7bfbd937e61614a1625f0
-            patch: 7f979c2d48a1207e95f07ab65287640c94afd912ce790c2803ee227ef9731eec
-            module: google.adk.evaluation.final_response_match_v2
-            file: src/google/adk/evaluation/final_response_match_v2.py
-            source: 5a32d4d655b53204dab0c65f0ff7d222b4a02e86056c9435e059e172c3c225c9
-          - name: adk-2
-            head: b6320a9d678aef67022dedce887e076539276943
-            base: 6a3828325b6f9feb429aa9e73e86837ad9acecdd
-            project_config: 3ffba06717576286f871cc7a1198a4b34d066f78fb642e4d8924e1920ca3a13f
-            tree: 12dca3277f89a2e16c173e787f08dbdf7bf3cd70
-            patch: 34e76a9194fadf01934650ffd18342f81dac0a24596b04158541c45d062899ec
-            module: google.adk.tools.load_artifacts_tool
-            file: src/google/adk/tools/load_artifacts_tool.py
-            source: 9d66d897feffa51aab8dd0c02bd18d536ab17f291ad4647bb91790d513473f1f
-          - name: existing-7471
-            head: 2e1a691cebe7166525adbb876a3b96dc89208e3c
-            base: 7d8c9502f924ed5e7a1ab00dc1f5a603e858abc3
-            tree: 0f9e1fa787d6728713637e4463dc11afd7fbb8cb
-            patch: 6bd574fce072e492bfddc5347614ddbc2f4f9d0bb13440bfdca234dbd5bfb143
-            module: google.adk.utils._google_client_headers
-            file: src/google/adk/utils/_google_client_headers.py
-            source: 6f5785bb67f5d22f705faa1243d2bfae64a1395ce3952de31699ba5e60a2b9ae
-            project_config: 8cd7ff0fc0787de4ff27da4c43e8d687f14db36201e3baa00e461258a82be2d6
         python:
           - version: '3.11'
             lane: py311
@@ -54,19 +26,11 @@ jobs:
           - version: '3.14'
             lane: py314
     env:
-      SOURCE_BASE: ${{ matrix.scope.base }}
-      PROJECT_CONFIG_SHA256: ${{ matrix.scope.project_config }}
-      SOURCE_HEAD: ${{ matrix.scope.head }}
-      SOURCE_TREE: ${{ matrix.scope.tree }}
-      SOURCE_PATCH: ${{ matrix.scope.patch }}
-      SOURCE_MODULE: ${{ matrix.scope.module }}
-      SOURCE_FILE: ${{ matrix.scope.file }}
-      SOURCE_SHA256: ${{ matrix.scope.source }}
       PYTHON_VERSION: ${{ matrix.python.version }}
       TOX_LANE: ${{ matrix.python.lane }}
       UV_EXCLUDE_NEWER: '2026-10-13T09:00:00Z'
     steps:
-      - name: Check out validation tooling only
+      - name: Check out validation control only
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           ref: ${{ github.sha }}
@@ -76,35 +40,26 @@ jobs:
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: ${{ matrix.python.version }}
-      - name: Install the previously successful standalone uv
+      - name: Install standalone uv
         uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           version: '0.12.23'
           enable-cache: false
-      - name: Check out the exact reviewed contribution
+      - name: Check out the verified upstream rebase parent
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          repository: BlueRaddish/adk-python
-          ref: ${{ matrix.scope.head }}
-          fetch-depth: 2
+          repository: google/adk-python
+          ref: 62745ccc62513514bc0f30f5cfdaf1c593d156ca
+          fetch-depth: 1
           path: source
           persist-credentials: false
-      - name: Verify source and unchanged configuration
+      - name: Apply reviewed patch, prove regression, run hooks and commit normally
         working-directory: source
-        run: python ../runner-control/scripts/_adk_matrix_validation.py proof
-      - name: Install declared extras and pristine tox lane
+        run: python ../runner-control/scripts/_adk_rebase_validation.py prepare
+      - name: Run the unchanged full supported tox lane
         working-directory: source
-        run: python ../runner-control/scripts/_adk_matrix_validation.py setup
-      - name: Run the complete unchanged tox unit lane
-        working-directory: source
-        run: python ../runner-control/scripts/_adk_matrix_validation.py tests
-      - name: Preserve final source and generated lock proof
+        run: python ../runner-control/scripts/_adk_rebase_validation.py tests
+      - name: Print final source, config, lock and native commit proof
         if: always()
         working-directory: source
-        run: python ../runner-control/scripts/_adk_matrix_validation.py after
-      - name: Print actual setup and full-suite outcomes
-        if: always()
-        run: |
-          for record in validation-evidence/*.json; do
-            if [ -f "$record" ]; then cat "$record"; fi
-          done
+        run: python ../runner-control/scripts/_adk_rebase_validation.py after

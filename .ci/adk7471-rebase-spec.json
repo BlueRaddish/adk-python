@@ -1,0 +1,39 @@
+{
+  "base": "62745ccc62513514bc0f30f5cfdaf1c593d156ca",
+  "old_head": "2e1a691cebe7166525adbb876a3b96dc89208e3c",
+  "files": [
+    "src/google/adk/utils/_google_client_headers.py",
+    "tests/unittests/utils/test_google_client_headers.py",
+    "src/google/adk/tools/mcp_tool/mcp_session_manager.py",
+    "tests/unittests/tools/mcp_tool/test_mcp_session_manager.py"
+  ],
+  "patch_sha256": "f8f4ede1abae63e5ff9ee82956bb0340c7982618bd1754647012a5547f394bf9",
+  "source_sha256": {
+    "src/google/adk/utils/_google_client_headers.py": "6f5785bb67f5d22f705faa1243d2bfae64a1395ce3952de31699ba5e60a2b9ae",
+    "tests/unittests/utils/test_google_client_headers.py": "d789f854b818e03f23ae49c588af9dfdd3c19f05fd4cee33cd6751718da672cd",
+    "src/google/adk/tools/mcp_tool/mcp_session_manager.py": "f6ab899fff4f837ddd885b642fa0bc9261c93be2d0f3df5935eabb7eebdc0789",
+    "tests/unittests/tools/mcp_tool/test_mcp_session_manager.py": "42450b7f6c054ee53c582f6bcbd42629bf730b408ac080be2e7364468ae8cb05"
+  },
+  "configuration_sha256": {
+    "tox.ini": "7eec9b6b133fc752f30a444e42d67689a38a1df08bfb8cb9ce49f28e30b6bfbf",
+    "pyproject.toml": "3ffba06717576286f871cc7a1198a4b34d066f78fb642e4d8924e1920ca3a13f"
+  },
+  "author": {
+    "name": "Jeeho Lee",
+    "email": "jeeholife2@gmail.com",
+    "date": "2026-10-09T07:49:13Z"
+  },
+  "committer": {
+    "name": "Jeeho Lee",
+    "email": "jeeholife2@gmail.com",
+    "date": "2026-10-13T10:55:14Z"
+  },
+  "resolution_cutoff": "2026-10-13T09:00:00Z",
+  "message_sha256": "e0da8a2070c0ca3aa426cb15d2f95c7e64e51d41650f28c1d832177a2394b428",
+  "source_git_blobs": {
+    "src/google/adk/tools/mcp_tool/mcp_session_manager.py": "28f2bc175041b3a0676e4dcc889c818542fb03a1",
+    "src/google/adk/utils/_google_client_headers.py": "980f35a1fc7d1870d9755df89ad79dfe4ab0f76b",
+    "tests/unittests/tools/mcp_tool/test_mcp_session_manager.py": "7e06e9b88f5ddbf835d56c71cc02ec6bf01608ac",
+    "tests/unittests/utils/test_google_client_headers.py": "b4e08c7e6d23ab05b884025311c533b8964c110f"
+  }
+}
