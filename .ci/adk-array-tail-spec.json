@@ -1,0 +1,44 @@
+{
+  "scope_id": "adk-array-tail",
+  "base": "3b2b949c4b0b2a063b01e838d0fdde4aa93336d7",
+  "files": [
+    "src/google/adk/utils/_schema_utils.py",
+    "tests/unittests/models/test_anthropic_llm.py"
+  ],
+  "source_sha256": {
+    "src/google/adk/utils/_schema_utils.py": "2ff6a845906e17d5fd898161aebff797d6bc8cd7305b6678ab2dc20d4268dbd7",
+    "tests/unittests/models/test_anthropic_llm.py": "e43093a7bf551f0eb53eb58a6ad97b5f5e3a310d0c5ec09e5629102ff143c76c"
+  },
+  "source_git_blobs": {
+    "src/google/adk/utils/_schema_utils.py": "2e6e85a5f03d82cbff2e1821b7d2a327b105d442",
+    "tests/unittests/models/test_anthropic_llm.py": "463fcf40dc840d83cf2550845daa173e59261ad8"
+  },
+  "configuration_sha256": {
+    "tox.ini": "7eec9b6b133fc752f30a444e42d67689a38a1df08bfb8cb9ce49f28e30b6bfbf",
+    "pyproject.toml": "3ffba06717576286f871cc7a1198a4b34d066f78fb642e4d8924e1920ca3a13f",
+    ".pre-commit-config.yaml": "c7d94b14a12db526d84110ffd762c91f0ba863bbc69413b09931857abd5ce149"
+  },
+  "patch_sha256": "4d3d47258122e7ce491afbea6df37f1e4f0a7d15b8bbce620150604e394180fd",
+  "message_sha256": "06dec9721a4a968961b58bde085f4d29fd520a5ed85e50bc5e75f83d0facd709",
+  "author": {
+    "name": "Jeeho Lee",
+    "email": "jeeholife2@gmail.com",
+    "date": "2026-10-14T03:34:26Z"
+  },
+  "committer": {
+    "name": "Jeeho Lee",
+    "email": "jeeholife2@gmail.com",
+    "date": "2026-10-14T03:34:26Z"
+  },
+  "resolution_cutoff": "2026-10-14T03:00:00Z",
+  "regression_args": [
+    "tests/unittests/models/test_anthropic_llm.py",
+    "-k",
+    "test_tool_array_tail_schema_types_are_lowercased"
+  ],
+  "expected_regression_failures": 2,
+  "focused_tests": [
+    "tests/unittests/utils/test_schema_utils.py",
+    "tests/unittests/models/test_anthropic_llm.py"
+  ]
+}

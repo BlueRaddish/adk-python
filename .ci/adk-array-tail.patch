@@ -1,0 +1,56 @@
+diff --git a/src/google/adk/utils/_schema_utils.py b/src/google/adk/utils/_schema_utils.py
+index 9ef27ccdd109299da01a72a5cae14e583e596283..2e6e85a5f03d82cbff2e1821b7d2a327b105d442 100644
+--- a/src/google/adk/utils/_schema_utils.py
++++ b/src/google/adk/utils/_schema_utils.py
+@@ -172,6 +172,7 @@ def lowercase_schema_types(value: object) -> None:
+         lowercase_schema_types(child_value)
+ 
+   for single_key in (
++      "additionalItems",
+       "additionalProperties",
+       "additional_properties",
+       "contains",
+@@ -181,6 +182,7 @@ def lowercase_schema_types(value: object) -> None:
+       "not",
+       "propertyNames",
+       "then",
++      "unevaluatedItems",
+       "unevaluatedProperties",
+   ):
+     child_value = value.get(single_key)
+diff --git a/tests/unittests/models/test_anthropic_llm.py b/tests/unittests/models/test_anthropic_llm.py
+index f239607d2912cae2dc1b1fa8f20a14f1c23fcab9..463fcf40dc840d83cf2550845daa173e59261ad8 100644
+--- a/tests/unittests/models/test_anthropic_llm.py
++++ b/tests/unittests/models/test_anthropic_llm.py
+@@ -720,6 +720,31 @@ def test_function_declaration_to_tool_param(
+   )
+ 
+ 
++@pytest.mark.parametrize("keyword", ["additionalItems", "unevaluatedItems"])
++def test_tool_array_tail_schema_types_are_lowercased(keyword):
++  """Array-tail schemas use JSON Schema types without changing default data."""
++  declaration = types.FunctionDeclaration(
++      name="collect_values",
++      parameters_json_schema={
++          "type": "OBJECT",
++          "default": {"type": "USER_DATA"},
++          "properties": {
++              "values": {
++                  "type": "ARRAY",
++                  keyword: {"type": ["STRING", "NULL"]},
++              },
++          },
++      },
++  )
++
++  tool = function_declaration_to_tool_param(declaration)
++
++  assert tool["input_schema"]["properties"]["values"][keyword] == {
++      "type": ["string", "null"],
++  }
++  assert tool["input_schema"]["default"] == {"type": "USER_DATA"}
++
++
+ @pytest.mark.asyncio
+ async def test_generate_content_async(
+     claude_llm, llm_request, generate_content_response, generate_llm_response

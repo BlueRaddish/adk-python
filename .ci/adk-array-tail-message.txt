@@ -1,0 +1,7 @@
+fix(schema): normalize array-tail schema types
+
+Visit additionalItems and unevaluatedItems in the shared schema
+normalizer so provider tool schemas do not retain uppercase types.
+Cover the real Anthropic tool converter and preserve default data.
+
+AI-assisted with OpenAI Codex.
