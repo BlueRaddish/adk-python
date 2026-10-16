@@ -1,4 +1,4 @@
-name: ADK Array-Tail Schema Validation (scratch)
+name: ADK Annotated Content Validation (scratch)
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   rebase-and-test:
-    name: array-tail-${{ matrix.python.lane }}
+    name: annotated-${{ matrix.python.lane }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -28,7 +28,7 @@ jobs:
     env:
       PYTHON_VERSION: ${{ matrix.python.version }}
       TOX_LANE: ${{ matrix.python.lane }}
-      UV_EXCLUDE_NEWER: '2026-10-14T03:00:00Z'
+      UV_EXCLUDE_NEWER: '2026-10-16T01:20:00Z'
     steps:
       - name: Check out validation control only
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -49,17 +49,17 @@ jobs:
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: google/adk-python
-          ref: 3b2b949c4b0b2a063b01e838d0fdde4aa93336d7
+          ref: f78149a97e109e9c947ade06e3a9ab8a45385e0e
           fetch-depth: 1
           path: source
           persist-credentials: false
       - name: Apply reviewed patch, prove regression, run hooks and commit normally
         working-directory: source
-        run: python ../runner-control/scripts/_adk_evening_validation.py prepare
+        run: python ../runner-control/scripts/_adk_oct15_validation.py prepare
       - name: Run the unchanged full supported tox lane
         working-directory: source
-        run: python ../runner-control/scripts/_adk_evening_validation.py tests
+        run: python ../runner-control/scripts/_adk_oct15_validation.py tests
       - name: Print final source, config, lock and native commit proof
         if: always()
         working-directory: source
-        run: python ../runner-control/scripts/_adk_evening_validation.py after
+        run: python ../runner-control/scripts/_adk_oct15_validation.py after
